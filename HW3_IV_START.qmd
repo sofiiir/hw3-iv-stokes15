@@ -218,7 +218,9 @@ export_summs(fit_2sls, digits = 3,
 
 **Question 4:** Choose two *robustness checks* from the paper that the authors use to increase confidence in their causal identification strategy. For each one, summarize the logic and findings from the robustness check in your own words:
 
-*Response:* _________________________ 
+*Response:* The use of wind speed as an instrumental variable is a robustness check for the fixed effects estimate. This robustness check identifies if there is selection bias for the locations of proposed wind turbines. The logic behind this robustness check is to identify if wind speed is the determining factor of where wind turbines are proposed. This would then satisfy the random assignment requirement and indicate that the proposed turbines are in fact not determined by political preference. 
+
+An additional robustness check employed in this research is the address the concern of spillover. Spillover is likely due to wind turbines being visible from neighborhoods outside of the precincts with operational wind turbines.The risk of spillover is addressed in this study by analyzing areas at 1km , 2km, 3km, 4km, and 5km radius of the proposed and operational wind turbines. To address the risk of spillover the authors exclude units less than 6km away from turbines as controls. 
 
 ------------------------------------------------------------------------
 
