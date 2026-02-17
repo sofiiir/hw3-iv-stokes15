@@ -80,7 +80,7 @@ Intuition for Using an Instrument:
 
 **Question 1:** After matching on observables, why might we still need to utilize an instrumental variable approach to identify the causal effect of turbine proposals on vote share? In other words, what potential issues remain that an IV method can help address in this context? Use specific examples from the study to illustrate threats to a causal interpretation, then explain how an IV approach is designed to mitigate those threats.
 
-*Response:* Using the instrumental variable approach addresses any selection bias in wind turbine location. The threats to being able to confidently identify causal effect are the potential effect of political boundaries on the location of proposed wind turbines. Additionally mentioned in the paper, the use of IV ensures that average home price, population with a university degree, median income, population density, and distance to lakes are not determining where wind turbines are proposed separate from wind power. 
+*Response:* Using the instrumental variable approach addresses selection bias in wind turbine location. The threats to being able to confidently identify causal effect are the potential effect of political boundaries on the location of proposed wind turbines. Additionally mentioned in the paper, as potential selection biases is average home price, population with a university degree, median income, population density, and distance to lakes are not determining where wind turbines are proposed separate from wind power. 
 
 The first stage equation identifies wind powers effect on wind proposals. The second stage equation identifies wind proposals effect on voting for the Liberal Party. 
 
@@ -99,7 +99,7 @@ c. After running the first stage, report the F-statistic for the instrument.
 **Assessing instrument strength**: A common rule of thumb is that the **F-statistic** on the excluded instrument(s) in the first stage should be greater than 10. An F-stat below 10 suggests a **weak instrument**, which can lead to biased IV estimates and unreliable inference.
 
 ```{r}
-first_stage <- lm(proposed_turbine_3km ~ log_wind_power + log_home_val_07 + p_uni_degree + log_median_inc + log_pop_denc + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat,
+first_stage <- lm(proposed_turbine_3km ~ log_wind_power + log_home_val_07 + p_uni_degree + log_median_inc + log_pop_denc + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat + as.factor(district_id),
                   data = matched_data)
 
 export_summs(first_stage, digits = 3,
@@ -119,7 +119,7 @@ paste0("The F-statistic is ", first_stage_summary$fstatistic[1])
 
 **Question 2A:** Based on the instrument relevance test reported in the study, would you conclude the instrument is strong enough to be credible? Explain what a weak instrument would mean in this setting: Specifically, what would it suggest about compliance with Ontario’s Green Energy Act policy? 
 
-*Response:* Yes, the F-statistic reported in the study is 68. The F-statistic we just calculated in this document rounds to 29. Since the F-statistic is greater than 10 this IV analysis is reliable to make inferences based on. A weak instrument would suggest that the IV estimates are biased and unreliable. In the case of Ontario's Green Energy Act, a weak instrument would suggest that the proposed wind turbine locations are not based solely on wind power and would also be correlated with other covariates such as those included in the IV model including median income, university education, or distance to lakes. 
+*Response:* Yes, the F-statistic reported in the study is 68 therefore the instrument is strong enough to be credible. The F-statistic we just calculated in this document rounds to 29. Since the F-statistic is greater than 10 this IV analysis is reliable to make inferences based on. A weak instrument would suggest that the IV estimates are biased and unreliable. In the case of Ontario's Green Energy Act, a weak instrument would suggest that the proposed wind turbine locations are not based solely on wind power and would also be correlated with other covariates such as those included in the IV model including median income, university education, or distance to lakes. 
 
 ------------------------------------------------------------------------
 
@@ -148,7 +148,7 @@ $$LiberalVoteShare_i = \beta_0 + \beta_1 \widehat{ProposedTurbine}_i + ControlVa
 
 ```{r}
 second_stage <- lm(change_liberal ~ proposed_turbine_3km_HAT + 
-log_wind_power + log_home_val_07 + p_uni_degree + log_median_inc + log_pop_denc + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat,
+log_home_val_07 + p_uni_degree + log_median_inc + log_pop_denc + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat + as.factor(district_id),
                   data = matched_data)
 
 export_summs(second_stage, digits = 3, 
