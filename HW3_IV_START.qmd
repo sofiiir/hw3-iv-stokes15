@@ -99,7 +99,7 @@ c. After running the first stage, report the F-statistic for the instrument.
 **Assessing instrument strength**: A common rule of thumb is that the **F-statistic** on the excluded instrument(s) in the first stage should be greater than 10. An F-stat below 10 suggests a **weak instrument**, which can lead to biased IV estimates and unreliable inference.
 
 ```{r}
-first_stage <- lm(proposed_turbine_3km ~ log_wind_power + log_home_val_07 + p_uni_degree + log_median_inc + log_pop_denc + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat + as.factor(district_id),
+first_stage <- lm(proposed_turbine_3km ~ log_wind_power + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat + as.factor(district_id), # fixed effect only on location
                   data = matched_data)
 
 export_summs(first_stage, digits = 3,
@@ -147,8 +147,7 @@ matched_data$proposed_turbine_3km_HAT <- predict(first_stage)
 $$LiberalVoteShare_i = \beta_0 + \beta_1 \widehat{ProposedTurbine}_i + ControlVariables... +  \epsilon_i$$
 
 ```{r}
-second_stage <- lm(change_liberal ~ proposed_turbine_3km_HAT + 
-log_home_val_07 + p_uni_degree + log_median_inc + log_pop_denc + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat + as.factor(district_id),
+second_stage <- lm(change_liberal ~ proposed_turbine_3km_HAT + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat + as.factor(district_id),
                   data = matched_data)
 
 export_summs(second_stage, digits = 3, 
@@ -204,8 +203,7 @@ Syntax for specifying 2SLS using `ivreg()`:
 
 ```{r}
   
-fit_2sls <- ivreg(change_liberal ~ proposed_turbine_3km + 
-log_wind_power + log_home_val_07 + p_uni_degree + log_median_inc + log_pop_denc + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat,
+fit_2sls <- ivreg(change_liberal ~ proposed_turbine_3km + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat | log_wind_power + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat,
                   data = matched_data)
 
 export_summs(fit_2sls, digits = 3,
