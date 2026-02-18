@@ -80,9 +80,9 @@ Intuition for Using an Instrument:
 
 **Question 1:** After matching on observables, why might we still need to utilize an instrumental variable approach to identify the causal effect of turbine proposals on vote share? In other words, what potential issues remain that an IV method can help address in this context? Use specific examples from the study to illustrate threats to a causal interpretation, then explain how an IV approach is designed to mitigate those threats.
 
-*Response:* Using the instrumental variable approach addresses selection bias in wind turbine location. The threats to being able to confidently identify causal effect are the potential effect of political boundaries on the location of proposed wind turbines. Additionally mentioned in the paper, as potential selection biases is average home price, population with a university degree, median income, population density, and distance to lakes are not determining where wind turbines are proposed separate from wind power. 
+*Response:* Using the instrumental variable approach addresses selection bias in wind turbine location. The threats to being able to confidently identify causal effect are the potential biased effect of political boundaries on the location of proposed wind turbines. Additionally mentioned in the paper, as potential selection biases for location are average home price, population with a university degree, median income, and population density. 
 
-The first stage equation identifies wind powers effect on wind proposals. The second stage equation identifies wind proposals effect on voting for the Liberal Party. 
+IV takes an incomplete randomization and makes the necessary adjustments to analyze causal effect. In the case of examining wind turbine distribution, the first stage equation identifies wind powers effect on wind proposals. The second stage equation identifies wind proposals effect on voting for the Liberal Party. 
 
 ------------------------------------------------------------------------
 
@@ -122,7 +122,9 @@ paste0("The F-statistic is ", first_stage_summary$fstatistic[1])
 
 **Question 2A:** Based on the instrument relevance test reported in the study, would you conclude the instrument is strong enough to be credible? Explain what a weak instrument would mean in this setting: Specifically, what would it suggest about compliance with Ontario’s Green Energy Act policy? 
 
-*Response:* Yes, the F-statistic reported in the study is 68 therefore the instrument is strong enough to be credible. The F-statistic we just calculated in this document rounds to 14.7. Since the F-statistic is greater than 10 this IV analysis is reliable to make inferences based on. A weak instrument would suggest that the IV estimates are biased and unreliable. In the case of Ontario's Green Energy Act, a weak instrument would suggest that the proposed wind turbine locations are not based solely on wind power and would also be correlated with other covariates such as those included in the IV model including median income, university education, or distance to lakes. 
+*Response:* Yes, the F-statistic reported in the study is 68 therefore the instrument is strong enough to be credible. The F-statistic we just calculated in this document rounds to 14.7. Since the F-statistics are greater than 10 this IV analysis is reliable to make inferences based on. Wind power is a strong instrument for conducting an IV in this analysis.
+
+A weak instrument would suggest that the IV estimates are biased and unreliable. In the case of Ontario's Green Energy Act, a weak instrument would suggest that the proposed wind turbine locations are not based solely on wind power and would also be correlated with other covariates such as median income or university education. 
 
 ------------------------------------------------------------------------
 
@@ -165,11 +167,11 @@ export_summs(second_stage, digits = 3,
 
 **Question 2B:** Imagine you are explaining your 2SLS findings to a policymaker in Ontario. What does the estimated coefficient on `proposed_turbine_3km_HAT` imply about the electoral impact of a local wind turbine proposal (within 3 km) on liberal vote share?
 
-*Response:* This isolates the variation in liberal party votes that is driven *only* by wind power. It suggests that wind power positively increases the amount of liberal party votes. 
+*Response:* The estimated coefficient on `proposed_turbine_3km_HAT` implies that a local wind turbine proposal (within 3 km) decreases liberal vote share. This value for denoting changes in liberal vote share are statistically significant meaning that the likelihood that these findings are due to random chance are low. 
 
-**Question 2C:** Explain ???**what it means that IV identifies a LATE (Local Average Treatment Estimate) in the context of the wind-turbine voting study**???. What specific subset of observations does the second-stage 2SLS estimate apply to, and what does it imply about interpretation and generalizability? 
+**Question 2C:** Explain **what it means that IV identifies a LATE (Local Average Treatment Estimate) in the context of the wind-turbine voting study**. What specific subset of observations does the second-stage 2SLS estimate apply to, and what does it imply about interpretation and generalizability? 
 
-*Response:*  The IV identifies LATE for the predicted treatment based on `proposed_turbine_3km_HAT`. 
+*Response:*  The IV identifies LATE for the predicted treatment based on `proposed_turbine_3km_HAT` and is not generalizable for `proposed_turbine_3km`. The first stage equation identifies wind powers effect on wind proposals. The second stage equation identifies wind proposals effect on voting for the Liberal Party. The second-stage 2SLS estimate applies to the predicted values based on the first stage equation. The interpretation of these findings is therefore based on those proposed turbines being influenced by wind power and not other covariates. 
 
 ------------------------------------------------------------------------
 
@@ -185,9 +187,9 @@ export_summs(second_stage, digits = 3,
 
 2. Relevance: Wind speed should strongly predict wind placement. 
 
-3. Independence: As good as random? Wind power is randomly distributed across the country. 
+3. Independence: As good as random? Wind power is randomly distributed across the study area, Ontario. 
 
-4. Monotonicity: The effect of wind power on change in liberal votes should always effect it in the same direction. In this case wind power should always negatively impact the number of liberal votes. 
+4. Monotonicity: The effect of wind power on change in liberal votes should always effect it in the same direction. In this case wind power should always negatively impact the number of liberal votes becuase wind power would increase the number of wind turbine proposals. 
 
 ------------------------------------------------------------------------
 
@@ -229,9 +231,9 @@ export_summs(fit_2sls, digits = 3,
 
 **Question 4:** Choose two *robustness checks* from the paper that the authors use to increase confidence in their causal identification strategy. For each one, summarize the logic and findings from the robustness check in your own words:
 
-*Response:* The use of wind speed as an instrumental variable is a robustness check for the fixed effects estimate. This robustness check identifies if there is selection bias for the locations of proposed wind turbines. The logic behind this robustness check is to identify if wind speed is the determining factor of where wind turbines are proposed. This would then satisfy the random assignment requirement and indicate that the proposed turbines are in fact not determined by political preference. 
+*Response:* The use of wind speed as an instrumental variable is a robustness check for the fixed effects estimate. This robustness check identifies if there is selection bias for the locations of proposed wind turbines. The logic behind this robustness check is to identify if wind speed is the determining factor of where wind turbines are proposed. This satisfies the as-if a random assignment were employed and indicates that the proposed turbines are in fact not determined by political boundaries. 
 
-An additional robustness check employed in this research is the address the concern of spillover. Spillover is likely due to wind turbines being visible from neighborhoods outside of the precincts with operational wind turbines.The risk of spillover is addressed in this study by analyzing areas at 1km , 2km, 3km, 4km, and 5km radius of the proposed and operational wind turbines. To address the risk of spillover the authors exclude units less than 6km away from turbines as controls. 
+An additional robustness check employed in this research is to address the concern of spillover. Spillover is likely due to wind turbines being visible from neighborhoods outside of the precincts with operational wind turbines. The risk of spillover is addressed in this study by analyzing areas at 1km , 2km, 3km, 4km, and 5km radius of the proposed and operational wind turbines. The paper found statistical significance in changes in votes for the Liberal party within a 3km radius of wind turbines. The paper states that the negative effect of communities reducing their votes for the Liberal Party is at the upper bounds of the estimate based on this added spillover analysis. To address the risk of spillover the authors exclude units less than 6km away from turbines as controls. 
 
 ------------------------------------------------------------------------
 
