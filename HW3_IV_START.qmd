@@ -99,7 +99,10 @@ c. After running the first stage, report the F-statistic for the instrument.
 **Assessing instrument strength**: A common rule of thumb is that the **F-statistic** on the excluded instrument(s) in the first stage should be greater than 10. An F-stat below 10 suggests a **weak instrument**, which can lead to biased IV estimates and unreliable inference.
 
 ```{r}
-first_stage <- lm(proposed_turbine_3km ~ log_wind_power + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat + as.factor(district_id), # fixed effect only on location
+first_stage <- lm(proposed_turbine_3km ~ log_wind_power + 
+                      mindistlake + mindistlake_sq + 
+                      longitude + long_sq + latitude + lat_sq + long_lat + 
+                      as.factor(district_id), # fixed effect only on location
                   data = matched_data)
 
 export_summs(first_stage, digits = 3,
@@ -119,7 +122,7 @@ paste0("The F-statistic is ", first_stage_summary$fstatistic[1])
 
 **Question 2A:** Based on the instrument relevance test reported in the study, would you conclude the instrument is strong enough to be credible? Explain what a weak instrument would mean in this setting: Specifically, what would it suggest about compliance with Ontario’s Green Energy Act policy? 
 
-*Response:* Yes, the F-statistic reported in the study is 68 therefore the instrument is strong enough to be credible. The F-statistic we just calculated in this document rounds to 29. Since the F-statistic is greater than 10 this IV analysis is reliable to make inferences based on. A weak instrument would suggest that the IV estimates are biased and unreliable. In the case of Ontario's Green Energy Act, a weak instrument would suggest that the proposed wind turbine locations are not based solely on wind power and would also be correlated with other covariates such as those included in the IV model including median income, university education, or distance to lakes. 
+*Response:* Yes, the F-statistic reported in the study is 68 therefore the instrument is strong enough to be credible. The F-statistic we just calculated in this document rounds to 14.7. Since the F-statistic is greater than 10 this IV analysis is reliable to make inferences based on. A weak instrument would suggest that the IV estimates are biased and unreliable. In the case of Ontario's Green Energy Act, a weak instrument would suggest that the proposed wind turbine locations are not based solely on wind power and would also be correlated with other covariates such as those included in the IV model including median income, university education, or distance to lakes. 
 
 ------------------------------------------------------------------------
 
@@ -147,7 +150,10 @@ matched_data$proposed_turbine_3km_HAT <- predict(first_stage)
 $$LiberalVoteShare_i = \beta_0 + \beta_1 \widehat{ProposedTurbine}_i + ControlVariables... +  \epsilon_i$$
 
 ```{r}
-second_stage <- lm(change_liberal ~ proposed_turbine_3km_HAT + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat + as.factor(district_id),
+second_stage <- lm(change_liberal ~ proposed_turbine_3km_HAT + 
+                       mindistlake + mindistlake_sq + 
+                       longitude + long_sq + latitude + lat_sq + long_lat + 
+                       as.factor(district_id),
                   data = matched_data)
 
 export_summs(second_stage, digits = 3, 
@@ -203,7 +209,14 @@ Syntax for specifying 2SLS using `ivreg()`:
 
 ```{r}
   
-fit_2sls <- ivreg(change_liberal ~ proposed_turbine_3km + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat | log_wind_power + mindistlake + mindistlake_sq + longitude + long_sq + latitude + lat_sq + long_lat,
+fit_2sls <- ivreg(change_liberal ~ proposed_turbine_3km + 
+                      mindistlake + mindistlake_sq + 
+                      longitude + long_sq + latitude + lat_sq + long_lat + 
+                      as.factor(district_id) | 
+                      log_wind_power + 
+                      mindistlake + mindistlake_sq + 
+                      longitude + long_sq + latitude + lat_sq + long_lat + 
+                      as.factor(district_id),
                   data = matched_data)
 
 export_summs(fit_2sls, digits = 3,
